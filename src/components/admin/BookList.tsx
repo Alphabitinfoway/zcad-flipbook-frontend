@@ -1,10 +1,21 @@
 import { useEffect, useState } from "react";
-import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
+
+import { FaPlus } from "react-icons/fa";
+
+import { FiEye, FiEdit, FiTrash2 } from "react-icons/fi";
+
 import DataTable from "react-data-table-component";
 
 import AdminLayout from "../../components/admin/AdminLayout";
+
 import AddBookModal from "../../components/admin/AddBookModal";
-import { getBooks } from "../../services/bookService";
+
+import ViewBookModal from "../../components/admin/ViewBookModal";
+
+import EditBookModal from "../../components/admin/EditBookModal";
+
+import { getBooks, deleteBook } from "../../services/bookService";
+
 import type { Book } from "../../types/book";
 
 export default function BookList() {
@@ -12,6 +23,11 @@ export default function BookList() {
   const [openModal, setOpenModal] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
+  const [viewModal, setViewModal] = useState(false);
+
+  const [editModal, setEditModal] = useState(false);
+
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
 
   const fetchBooks = async () => {
     try {
@@ -22,6 +38,31 @@ export default function BookList() {
       console.error(error);
     } finally {
       setLoading(false);
+    }
+  };
+  const handleView = (book: Book) => {
+    setSelectedBook(book);
+
+    setViewModal(true);
+  };
+
+  const handleEdit = (book: Book) => {
+    setSelectedBook(book);
+
+    setEditModal(true);
+  };
+
+  const handleDelete = async (id: string) => {
+    const confirmDelete = window.confirm("Are you sure?");
+
+    if (!confirmDelete) return;
+
+    try {
+      await deleteBook(id);
+
+      fetchBooks();
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -64,20 +105,23 @@ export default function BookList() {
       ),
     },
     {
-      name: "Actions",
+      name: "Action",
+
       cell: (row: Book) => (
         <div className="flex gap-3">
-          <button
-            className="text-blue-600 hover:text-blue-800"
-            onClick={() => console.log("Edit", row._id)}
-          >
-            <FaEdit />
+          <button onClick={() => handleView(row)} className="text-blue-600">
+            <FiEye />
           </button>
+
+          <button onClick={() => handleEdit(row)} className="text-green-600">
+            <FiEdit />
+          </button>
+
           <button
-            className="text-red-600 hover:text-red-800"
-            onClick={() => console.log("Delete", row._id)}
+            onClick={() => handleDelete(row._id)}
+            className="text-red-600"
           >
-            <FaTrash />
+            <FiTrash2 />
           </button>
         </div>
       ),
@@ -85,7 +129,7 @@ export default function BookList() {
   ];
 
   const filteredData = books.filter((book) =>
-    book.title.toLowerCase().includes(search.toLowerCase())
+    book.title.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
@@ -125,6 +169,18 @@ export default function BookList() {
           isOpen={openModal}
           onSuccess={fetchBooks}
           onClose={() => setOpenModal(false)}
+        />
+        <ViewBookModal
+          show={viewModal}
+          onClose={() => setViewModal(false)}
+          book={selectedBook}
+        />
+
+        <EditBookModal
+          show={editModal}
+          onClose={() => setEditModal(false)}
+          book={selectedBook}
+          onSuccess={fetchBooks}
         />
       </div>
     </AdminLayout>

@@ -19,17 +19,17 @@ export default function BookPreview() {
   const { handle } = useParams();
 
   const [book, setBook] = useState<Book | null>(null);
-  console.log("🚀 ~ BookPreview ~ book:", book)
+  console.log("🚀 ~ BookPreview ~ book:", book);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   console.log("BOOK:", book);
-console.log("BOOK PREVIEW IMAGES:", book?.previewImages);
+  console.log("BOOK PREVIEW IMAGES:", book?.previewImages);
 
   useEffect(() => {
     const fetchBook = async () => {
       try {
         const res = await api.get(`/books/handle/${handle}`);
-        console.log("🚀 ~ fetchBook ~ res:", res)
+        console.log("🚀 ~ fetchBook ~ res:", res);
         setBook(res.data.data);
       } catch (err) {
         console.error(err);
@@ -54,8 +54,6 @@ console.log("BOOK PREVIEW IMAGES:", book?.previewImages);
 
   return (
     <div className="bg-gray-100 min-h-screen">
-      <Navbar />
-
       <div className="max-w-7xl mx-auto py-10">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold">{book.title}</h1>
@@ -64,9 +62,11 @@ console.log("BOOK PREVIEW IMAGES:", book?.previewImages);
 
         <div className="flex justify-center">
           <FlipBookViewer
-  images={book.previewImages}
-  handle={book.shopifyHandle}
-/>
+            images={book.previewImages}
+            handle={book.shopifyHandle}
+            title={book.title}
+            author={book.author}
+          />
         </div>
       </div>
     </div>
