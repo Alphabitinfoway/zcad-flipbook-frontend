@@ -18,7 +18,7 @@ function App() {
 
         {/* Admin */}
         <Route
-          path="/admin/books"
+          path="/"
           element={<BookList />}
         />
 
