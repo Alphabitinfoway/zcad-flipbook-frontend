@@ -46,7 +46,7 @@ export default function AddBookModal({ isOpen, onClose, onSuccess }: Props) {
   };
   const productOptions = products.map((product) => ({
     value: product.id.toString(),
-    label: product.title,
+    label: product.handle,
     product,
   }));
   useEffect(() => {
