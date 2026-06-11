@@ -58,7 +58,6 @@ export default function AddBookModal({ isOpen, onClose, onSuccess }: Props) {
     }
   }, [isOpen]);
 
-
   const resetForm = () => {
     setTitle("");
     setAuthor("");
