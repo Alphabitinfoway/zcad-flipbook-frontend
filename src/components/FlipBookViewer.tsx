@@ -40,7 +40,13 @@ export default function FlipBookViewer({
   title,
   author,
 }: Props) {
-  const flipBookRef = useRef<any>(null);
+  type FlipBookRef = {
+    pageFlip?: () => {
+      flipPrev: () => void;
+      flipNext: () => void;
+    };
+  };
+  const flipBookRef = useRef<FlipBookRef | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [bookSize, setBookSize] = useState(getBookSize);
 
@@ -57,11 +63,11 @@ export default function FlipBookViewer({
   }, []);
 
   const handlePrev = () => {
-    flipBookRef.current?.pageFlip()?.flipPrev();
+    flipBookRef.current?.pageFlip?.()?.flipPrev?.();
   };
 
   const handleNext = () => {
-    flipBookRef.current?.pageFlip()?.flipNext();
+    flipBookRef.current?.pageFlip?.()?.flipNext?.();
   };
 
   const handleFlip = (e: FlipEvent) => {
@@ -72,7 +78,6 @@ export default function FlipBookViewer({
 
   return (
     <div className="flex flex-col items-center gap-4 py-4 px-2 w-full">
-
       {/* Header */}
       <div className="text-center">
         <p className="text-xs font-medium tracking-[2px] uppercase text-[#185A85]">
@@ -104,7 +109,6 @@ export default function FlipBookViewer({
             "0 8px 40px rgba(24,90,133,0.18), 0 2px 8px rgba(0,0,0,0.08)",
         }}
       >
-        {/* @ts-ignore */}
         <HTMLFlipBook
           key={`${bookSize.width}-${bookSize.height}`}
           ref={flipBookRef}

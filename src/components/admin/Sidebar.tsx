@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import {
   FaBookOpen,
-  FaTachometerAlt,
+  
 } from "react-icons/fa";
 
 export default function Sidebar() {
@@ -24,19 +24,10 @@ export default function Sidebar() {
       {/* Menu */}
       <nav className="p-4 space-y-2">
 
-        <Link
-          to="/admin"
-          className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-100 hover:text-primary-500 transition-all duration-200"
-        >
-          <FaTachometerAlt size={18} />
-
-          <span className="font-medium">
-            Dashboard
-          </span>
-        </Link>
+      
 
         <Link
-          to="/admin/books"
+          to="/"
           className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-100 hover:text-primary-500 transition-all duration-200"
         >
           <FaBookOpen size={18} />

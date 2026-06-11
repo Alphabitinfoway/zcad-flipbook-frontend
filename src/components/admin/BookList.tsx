@@ -17,6 +17,7 @@ import EditBookModal from "../../components/admin/EditBookModal";
 import { getBooks, deleteBook } from "../../services/bookService";
 
 import type { Book } from "../../types/book";
+import toast from "react-hot-toast";
 
 export default function BookList() {
   const [search, setSearch] = useState("");
@@ -59,15 +60,17 @@ export default function BookList() {
 
     try {
       await deleteBook(id);
-
+toast.success("Book deleted successfully!");
       fetchBooks();
     } catch (error) {
       console.log(error);
+       toast.error("Failed to delete book!");
     }
   };
 
   useEffect(() => {
-    void fetchBooks();
+    // defer calling fetchBooks so setState is not invoked synchronously within the effect
+    void Promise.resolve().then(fetchBooks);
   }, []);
 
   const columns = [

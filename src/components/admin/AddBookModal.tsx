@@ -4,6 +4,8 @@ import axios from "axios";
 import { baseURL } from "../../services/api";
 
 import { uploadBook } from "../../services/bookService";
+import toast from "react-hot-toast";
+import Select from "react-select";
 
 interface Props {
   isOpen: boolean;
@@ -33,12 +35,6 @@ export default function AddBookModal({ isOpen, onClose, onSuccess }: Props) {
 
   const [uploading, setUploading] = useState(false);
 
-  useEffect(() => {
-    if (isOpen) {
-      fetchProducts();
-    }
-  }, [isOpen]);
-
   const fetchProducts = async () => {
     try {
       const res = await axios.get(`${baseURL}/shopify/products`);
@@ -48,22 +44,20 @@ export default function AddBookModal({ isOpen, onClose, onSuccess }: Props) {
       console.log(error);
     }
   };
+  const productOptions = products.map((product) => ({
+    value: product.id.toString(),
+    label: product.title,
+    product,
+  }));
+  useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(() => {
+        fetchProducts();
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
-  const handleProductChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const product = products.find(
-      (item) => item.id.toString() === e.target.value,
-    );
-
-    if (!product) return;
-
-    setSelectedProduct(e.target.value);
-
-    setTitle(product.title);
-
-    setShopifyHandle(product.title);
-
-    setAuthor(product.product_type || "");
-  };
 
   const resetForm = () => {
     setTitle("");
@@ -77,14 +71,12 @@ export default function AddBookModal({ isOpen, onClose, onSuccess }: Props) {
     e.preventDefault();
 
     if (!selectedProduct) {
-      alert("Please select a product");
-
+      toast.error("Please select a product");
       return;
     }
 
     if (!pdf) {
-      alert("Please upload PDF");
-
+      toast.error("Please upload a PDF");
       return;
     }
 
@@ -94,26 +86,26 @@ export default function AddBookModal({ isOpen, onClose, onSuccess }: Props) {
       const formData = new FormData();
 
       formData.append("title", title);
-
       formData.append("author", author);
-
       formData.append("shopifyHandle", shopifyHandle);
-
       formData.append("productId", selectedProduct);
-
       formData.append("pdf", pdf);
 
-      const response = await uploadBook(formData);
+      const res = await uploadBook(formData);
 
-      console.log(response.data);
+      toast.success(res?.data?.message || "Book added successfully!");
 
       onSuccess();
-
       resetForm();
-
       onClose();
     } catch (error) {
-      console.log(error);
+      console.error(error);
+
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || "Failed to create book");
+      } else {
+        toast.error("Something went wrong");
+      }
     } finally {
       setUploading(false);
     }
@@ -156,19 +148,29 @@ export default function AddBookModal({ isOpen, onClose, onSuccess }: Props) {
               Shopify Product
             </label>
 
-            <select
-              value={selectedProduct}
-              onChange={handleProductChange}
-              className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-primary-500 outline-none"
-            >
-              <option value="">Select Product</option>
+            <Select
+              options={productOptions}
+              placeholder="Search Product..."
+              isSearchable
+              value={
+                productOptions.find(
+                  (option) => option.value === selectedProduct,
+                ) || null
+              }
+              onChange={(selectedOption) => {
+                if (!selectedOption) return;
 
-              {products.map((product) => (
-                <option key={product.id} value={product.id}>
-                  {product.title}
-                </option>
-              ))}
-            </select>
+                const product = selectedOption.product;
+
+                setSelectedProduct(selectedOption.value);
+                setTitle(product.title);
+
+                // Shopify Handle should be handle, not title
+                setShopifyHandle(product.handle);
+
+                setAuthor(product.product_type || "");
+              }}
+            />
           </div>
 
           {/* Preview */}
@@ -228,7 +230,7 @@ export default function AddBookModal({ isOpen, onClose, onSuccess }: Props) {
             <button
               type="submit"
               disabled={uploading}
-              className="bg-primary-500 hover:bg-primary-600 px-6 py-2  border rounded-lg disabled:opacity-50 cursor-pointer"
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
             >
               {uploading ? "Uploading..." : "Save Book"}
             </button>

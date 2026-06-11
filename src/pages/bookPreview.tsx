@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import api from "../services/api";
-import Navbar from "../components/Navbar";
 import FlipBookViewer from "../components/FlipBookViewer";
 
 interface Book {
@@ -19,17 +18,15 @@ export default function BookPreview() {
   const { handle } = useParams();
 
   const [book, setBook] = useState<Book | null>(null);
-  console.log("🚀 ~ BookPreview ~ book:", book);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  console.log("BOOK:", book);
-  console.log("BOOK PREVIEW IMAGES:", book?.previewImages);
 
   useEffect(() => {
     const fetchBook = async () => {
       try {
         const res = await api.get(`/books/handle/${handle}`);
-        console.log("🚀 ~ fetchBook ~ res:", res);
+
         setBook(res.data.data);
       } catch (err) {
         console.error(err);

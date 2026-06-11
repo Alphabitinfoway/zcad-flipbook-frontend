@@ -1,10 +1,20 @@
 import React from "react";
 
-const ViewBookModal = ({
-  show,
-  onClose,
-  book,
-}: any) => {
+type Book = {
+  title: string;
+  author?: string;
+  shopifyHandle?: string;
+  productId?: string | number;
+  pdfUrl?: string;
+};
+
+interface ViewBookModalProps {
+  show: boolean;
+  onClose: () => void;
+  book?: Book | null;
+}
+
+const ViewBookModal: React.FC<ViewBookModalProps> = ({ show, onClose, book }) => {
 
   if (!show || !book)
     return null;
