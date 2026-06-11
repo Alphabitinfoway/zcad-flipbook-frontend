@@ -30,7 +30,7 @@ function getBookSize() {
     return { width: 300, height: 420 };
   } else {
     // Desktop
-    return { width: 420, height: 580 };
+    return { width: 550, height: 750 };
   }
 }
 
