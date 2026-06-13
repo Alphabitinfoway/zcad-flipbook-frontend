@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import api from "../services/api";
-import FlipBookViewer from "../components/FlipBookViewer";
+import FlipBookViewer from "../components/admin/FlipBook/FlipBookViewer";
 
 interface Book {
   _id: string;

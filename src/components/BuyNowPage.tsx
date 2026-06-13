@@ -49,7 +49,7 @@ export default function BuyNowPage({ handle }: Props) {
           Preview Complete
         </h2>
         <p
-          className="text-gray-400 leading-relaxed max-w-[200px] sm:max-w-xs mx-auto"
+          className="text-gray-400 leading-relaxed max-w-50 sm:max-w-xs mx-auto"
           style={{ fontSize: "clamp(0.6rem, 2.5vw, 0.875rem)" }}
         >
           You've reached the end of the preview. Get full access to continue reading.
@@ -57,7 +57,7 @@ export default function BuyNowPage({ handle }: Props) {
       </div>
 
       {/* Features list */}
-      <div className="w-full max-w-[200px] sm:max-w-xs bg-[#E6F1FB] rounded-lg px-3 sm:px-5 py-3 sm:py-4 text-left space-y-1.5 sm:space-y-2">
+      <div className="w-full max-w-50 sm:max-w-xs bg-[#E6F1FB] rounded-lg px-3 sm:px-5 py-3 sm:py-4 text-left space-y-1.5 sm:space-y-2">
         {features.map((item) => (
           <div
             key={item}
@@ -85,7 +85,7 @@ export default function BuyNowPage({ handle }: Props) {
       {/* Buy button */}
       <button
         onClick={handleBuy}
-        className="w-full max-w-[200px] sm:max-w-xs bg-[#185A85] hover:bg-[#0C447C] active:scale-95 text-white rounded-lg font-medium transition-all"
+        className="w-full max-w-50 sm:max-w-xs bg-[#185A85] hover:bg-[#0C447C] active:scale-95 text-white rounded-lg font-medium transition-all"
         style={{
           fontSize: "clamp(0.65rem, 2.5vw, 0.875rem)",
           padding: "clamp(6px, 2vw, 12px) 16px",

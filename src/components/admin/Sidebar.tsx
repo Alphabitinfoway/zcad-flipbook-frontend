@@ -10,8 +10,11 @@ export default function Sidebar() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setIsOpen(false);
-  }, [location.pathname]);
+    if (!isOpen) return;
+    // Defer closing to avoid calling setState synchronously inside the effect
+    const id = setTimeout(() => setIsOpen(false), 0);
+    return () => clearTimeout(id);
+  }, [location.pathname, isOpen]);
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
