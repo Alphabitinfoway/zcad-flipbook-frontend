@@ -32,7 +32,7 @@ function getBookConfig() {
   } else if (w < 1024) {
     return { width: 320, height: 450, portrait: true };
   } else {
-    return { width: 480, height: 660, portrait: false };
+    return { width: 550, height: 750, portrait: false };
   }
 }
 
